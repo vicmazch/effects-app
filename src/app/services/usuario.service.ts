@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -12,12 +12,15 @@ export class UsuarioService {
   constructor(private http: HttpClient) {}
 
   getUsers(): Observable<any> {
-    return this.http
-      .get(`${this.url}/users?per_page=6`)
-      .pipe(map((_data) => _data['data']));
+    return this.http.get(`${this.url}/users?per_page=6`).pipe(
+      map((_data) => _data['data']),
+      delay(3000)
+    );
   }
 
-  getUser(idUsr: string) {
-    this.http.get(`${this.url}/users/${idUsr}`);
+  getUserById(idUsr: string | number): Observable<any> {
+    return this.http
+      .get(`${this.url}/users/${idUsr}`)
+      .pipe(map((_data) => _data['data']));
   }
 }
